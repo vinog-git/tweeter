@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/vinog-git/tweeter/"
   },
   "author": "ViNo",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vinog-git/tweeter/"
+    "url": ""
   },
-  "homepage": "",
+  "homepage": "https://twitter.com/vaderdarther",
   "dependencies": {
     "twitter": "^1.7.1"
   }
