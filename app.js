@@ -9,7 +9,7 @@ function postTweet(tweetNumber) {
   var tweetNumber = tweetNumber || 0;
 
   var params = {
-    status: tweets[tweetNumber] + ' ' + '@vinshine'
+    status: tweets[tweetNumber] + ' #starwarsquotes'
   }
 
   T.post('statuses/update', params, function(err, result, response) {
@@ -25,4 +25,4 @@ function postTweet(tweetNumber) {
   });
 }
 
-postTweet(0);
+postTweet();

@@ -1,5 +1,5 @@
 {
-  "name": "Twitter Bot",
+  "name": "twitterbot",
   "version": "1.0.0",
   "description": "Nodejs Twitter Bot",
   "main": "app.js",
