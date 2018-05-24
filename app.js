@@ -1,6 +1,7 @@
 var Twitter = require('twitter');
 var config = require('./config.js');
 var tempdata = require('./data.js');
+
 var T = new Twitter(config);
 
 var tweets = tempdata.data;
@@ -12,7 +13,7 @@ function postTweet(tweetNumber) {
     status: tweets[tweetNumber] + ' #starwarsquotes'
   }
 
-  T.post('statuses/update', params, function(err, result, response) {
+  T.post('statuses/update', params, function (err, result, response) {
     if (!err) {
       console.log(result.text);
       tweetNumber++;
