@@ -2,9 +2,11 @@
   "name": "twitterbot",
   "version": "1.0.0",
   "description": "Nodejs Twitter Bot",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deltweet": "node src/deleteTweet.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,10 @@
   },
   "homepage": "https://twitter.com/vaderdarther",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "express": "^4.16.3"
   }
 }
