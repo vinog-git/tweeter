@@ -4,100 +4,84 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Tweeter - Darth Vader</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
         crossorigin="anonymous">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
-    <!-- <script src="app.js"></script> -->
+    <script src="main.js"></script>
     <style>
         @keyframes blink {
-            /**
-     * At the start of the animation the dot
-     * has an opacity of .2
-     */
             0% {
                 opacity: .2;
             }
-            /**
-     * At 20% the dot is fully visible and
-     * then fades out slowly
-     */
             20% {
                 opacity: 1;
             }
-            /**
-     * Until it reaches an opacity of .2 and
-     * the animation can start again
-     */
             100% {
                 opacity: .2;
             }
         }
 
         .animatingdots span {
-            /**
-     * Use the blink animation, which is defined above
-     */
             animation-name: blink;
-            /**
-     * The animation should take 1.4 seconds
-     */
             animation-duration: 1.4s;
-            /**
-     * It will repeat itself forever
-     */
             animation-iteration-count: infinite;
-            /**
-     * This makes sure that the starting style (opacity: .2)
-     * of the animation is applied before the animation starts.
-     * Otherwise we would see a short flash or would have
-     * to set the default styling of the dots to the same
-     * as the animation. Same applies for the ending styles.
-     */
             animation-fill-mode: both;
         }
 
         .animatingdots span:nth-child(2) {
-            /**
-     * Starts the animation of the third dot
-     * with a delay of .2s, otherwise all dots
-     * would animate at the same time
-     */
             animation-delay: .2s;
         }
 
         .animatingdots span:nth-child(3) {
-            /**
-     * Starts the animation of the third dot
-     * with a delay of .4s, otherwise all dots
-     * would animate at the same time
-     */
             animation-delay: .4s;
         }
     </style>
 </head>
 
 <body class="bg-primary">
-    <div class="container">
-        <div class="row justify-content-center align-items-center display-1" style="height:100vh; max-height:800px">
-            <div class="m-3 display-4">
-                <span class="badge badge-pill badge-light">
-                    <span class="badge badge-light">
-                        <img src="https://abs.twimg.com/errors/logo23x19@2x.png" alt="Twitter Logo" />
-                    </span>
-                    vader<span class="text-muted">darther</span>
-                </span>
-                
-            </div>
-            <div>
-                <p class="m-3 animatingdots text-white">Tweeting
-                    <span>.</span>
-                    <span>.</span>
-                    <span>.</span>
-                </p>
-            </div>
+    <div class="container-fluid fixed-top">
+        <div onclick="toggleForm()" id="toggler" class="bg-light rounded-circle" style="width:40px;height:40px;position:absolute;right:10px;top:10px;padding: 9px; cursor:pointer">
+            &#x1f512;
         </div>
+        <form name="configForm" onsubmit="submitForm(event)" style="display:none;">
+
+            <div class="col-6 float-right bg-light p-3">
+                <div class="md-form">
+                    <div class="close" onclick=toggleForm();>
+                        &times;
+                    </div>
+                    <input type="text" id="configuration" class="col mt-2 form-control" placeholder="Enter content for config.js" name="configuration"
+                        autocomplete="off" />
+                    <input type="password" id="configAuth" name="configAuth" class="col mt-2 form-control" placeholder="Auth Token" />
+                    <input class="col btn btn-dark text-white mt-3" type="submit" value="Submit" />
+                </div>
+            </div>
+
+    </div>
+    </form>
+
+
+    </div>
+    <div class="row align-items-center justify-content-center" style="height:100vh; max-height:600px">
+        <div>
+            <span class="badge badge-pill badge-light">
+                <span class="badge badge-light">
+                    <img src="https://abs.twimg.com/errors/logo23x19@2x.png" alt="Twitter Logo" />
+                </span>
+                vader
+                <span class="text-muted">darther</span>
+            </span>
+
+        </div>
+        <div>
+            <p class="m-3 animatingdots text-white display-3">Tweeting
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+            </p>
+        </div>
+
     </div>
 
 </body>

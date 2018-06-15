@@ -19,6 +19,7 @@
   },
   "homepage": "https://twitter.com/vaderdarther",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "twitter": "^1.7.1"
   },
   "devDependencies": {

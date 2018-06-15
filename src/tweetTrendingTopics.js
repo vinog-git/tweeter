@@ -2,20 +2,20 @@
 
 function tweetTrendingTopics() {
   var Twitter = require('twitter');
-  var config = require('./config.js');
+  var config = require('./config');
   var T = new Twitter(config);
 
   // setInterval Tweeter
   startTweeting();
-  var counter = 0;
-  var startContinuousTweeting = setInterval(function () {
+  let counter = 0;
+  let startContinuousTweeting = setInterval(function () {
+    counter++;
     if (counter) {
       console.log('Tweeting with ', counter);
-      tweeter();
+      startTweeting();
     } else {
       clearInterval(startContinuousTweeting);
     }
-    counter++;
   }, 3600000);
 
   function startTweeting() {
