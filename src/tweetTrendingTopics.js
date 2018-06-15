@@ -16,7 +16,7 @@ function tweetTrendingTopics() {
     } else {
       clearInterval(startContinuousTweeting);
     }
-  }, 120000);
+  }, 3600000);
 
   function startTweeting() {
     // Get trending topics of a location with woeid (Chennai :: 2295424)  id: 2295424
