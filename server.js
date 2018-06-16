@@ -124,6 +124,7 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
         res.end(`Completed tweeting all messages.`)
     } else {
         console.log('Config File not Available.');
+        res.end('Config File not Available.\n')
     }
 });
 //----------------------------------------------------------------------------
