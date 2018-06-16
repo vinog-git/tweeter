@@ -41,7 +41,8 @@ app.use(bodyParser.json());
 app.post("/api/v1/config", function (req, res) {
     req.body = JSON.stringify(req.body);
     let data = `module.exports=${req.body}`;
-    fs.writeFile('./src/js/config.js', data, (err) => {
+    console.log(data);
+    fs.writeFile('./src/js/config.js', data.toString(), (err) => {
         if (!err) {
             let isConfigured = fs.existsSync('./src/js/config.js');
             if (isConfigured) {
