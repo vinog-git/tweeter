@@ -3,9 +3,9 @@
 let tweeterTimer;
 
 function tweetTrendingTopics() {
-  var Twitter = require('twitter');
-  var config = require('./config');
-  var T = new Twitter(config);
+  let Twitter = require('twitter');
+  let config = require('./config');
+  let T = new Twitter(config);
 
   startTweeting();
 

@@ -20,7 +20,9 @@
   "homepage": "https://twitter.com/vaderdarther",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "twitter": "^1.7.1"
+    "node-fetch": "^2.1.2",
+    "twitter": "^1.7.1",
+    "xlsx": "^0.13.0"
   },
   "devDependencies": {
     "express": "^4.16.3"
