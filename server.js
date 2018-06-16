@@ -84,19 +84,13 @@ app.all('/api/v1/tweets/:action', (req, res) => {
 
 app.get('/api/v1/xlsx', (req, res) => {
     isConfigured = isConfigFilePresent();
-    if (isConfigured) {
-        try {
-            let workbook = xlsx.readFile('uploads/tweets.xlsx');
-            let sheet_name_list = workbook.SheetNames;
-            let xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            console.log('Excel file data returned');
-            res.writeHead(200);
-            res.end(JSON.stringify({ 'data': xlData }));
-        }
-        catch{
-            res.writeHead(412);
-            res.end(JSON.stringify({ 'error': 'Custom Error' }));
-        }
+    if (isConfigured && fs.existsSync('uploads/tweets.xlsx')) {
+        let workbook = xlsx.readFile('uploads/tweets.xlsx');
+        let sheet_name_list = workbook.SheetNames;
+        let xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        console.log('Excel file data returned');
+        res.writeHead(200);
+        res.end(JSON.stringify({ 'data': xlData }));
     } else {
         res.writeHead(412);
         res.end(JSON.stringify({ 'error': 'Config File Unavailable' }));
@@ -107,7 +101,7 @@ app.get('/api/v1/xlsx', (req, res) => {
 
 app.get('/api/v1/tweetfromexcel', (req, res) => {
     isConfigured = isConfigFilePresent();
-    if (isConfigured) {
+    if (isConfigured && fs.existsSync('uploads/tweets.xlsx')) {
         let config = require('./src/js/config');
         const T = new Twitter(config);
 
