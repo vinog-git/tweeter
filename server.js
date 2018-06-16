@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 // All API Services
 //----------------------------------------------------------------------------
 // Create config file and start tweeting
-app.post("/config", function (req, res) {
+app.post("/api/v1/config", function (req, res) {
     req.body = JSON.stringify(req.body);
     let data = `module.exports=${req.body}`;
     fs.writeFile('./src/js/config.js', data, (err) => {
@@ -52,7 +52,7 @@ app.post("/config", function (req, res) {
 });
 //----------------------------------------------------------------------------
 // Start or stop tweeting
-app.all('/tweets/:action', (req, res) => {
+app.all('/api/v1/tweets/:action', (req, res) => {
     let action = req.params.action;
     if (action === 'start') {
         console.log('Started tweeting.')
