@@ -1,53 +1,67 @@
+"use strict";
+
+//----------------------------------------------------------------------------
+// Require lib modules
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser");
 const app = express();
 
-let tweetTrendingTopics = require('./src/tweetTrendingTopics');
+//----------------------------------------------------------------------------
+// Require custom modules
+let tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
 
+//----------------------------------------------------------------------------
+// Start Express Server
 app.use('/', express.static('src'));
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log('Tweeter is listening at ' + PORT));
-
-// Check if config file is available
-if (fs.existsSync('src/config.js')) {
-    tweetTrendingTopics();
+//----------------------------------------------------------------------------
+// Check config file availability
+if (fs.existsSync('./src/js/config.js')) {
+    tweetTrendingTopics.startTweeting();
     console.log('Config file found: Starting to tweet');
 } else {
-    console.log('Config file for T. authentication is missing');
+    console.log(`Can't Tweet without auth details. \nProvide auth details.`);
 }
-
+//----------------------------------------------------------------------------
+// BodyParser to read request body
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+//----------------------------------------------------------------------------
 
-// Service to store config file
-app.post("/config", function (request, response) {
-    let contentForConfigJs = request.body;
-    let callResponse = { callStatus: 'Failure' };
-    if (contentForConfigJs.userAuth !== 'iRobot') {
-        callResponse.callStatus = 'Authentication Failed';
-        console.log('Authentication failed');
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.end(JSON.stringify(callResponse));
-    } else {
 
-        fs.writeFile('src/config.js', contentForConfigJs.userInput, (err) => {
-            if (err) {
-                callResponse.callStatus = 'Unable to create File';
-                console.log('Unable to create file');
-                response.writeHead(412, { 'Content-Type': 'text/plain' });
-                response.end(JSON.stringify(callResponse));
-            } else {
-                callResponse.callStatus = 'Success';
-                tweetTrendingTopics();
-                console.log('Config file created: Starting to tweet');
-                response.writeHead(200, { 'Content-Type': 'text/plain' });
-                response.end(JSON.stringify(callResponse));
-
-            }
-        });
-    }
-
+// All API Services
+//----------------------------------------------------------------------------
+// Create config file and start tweeting
+app.post("/config", function (req, res) {
+    req.body = JSON.stringify(req.body);
+    let data = `module.exports=${req.body}`;
+    fs.writeFile('./src/js/config.js', data, (err) => {
+        if (err) {
+            console.log(`Error in createFile: ${err}`);
+            res.end();
+        } else {
+            console.log('Config file created: Starting to tweet');
+            tweetTrendingTopics.startTweeting();
+            res.end('File Created. Tweeting Now.');
+        }
+    });
 });
+//----------------------------------------------------------------------------
+// Start or stop tweeting
+app.all('/tweets/:action', (req, res) => {
+    let action = req.params.action;
+    if (action === 'start') {
+        console.log('Started tweeting.')
+        res.end('Started tweeting.');
+        tweetTrendingTopics.startTweeting();
+    } else {
+        console.log('Stopped tweeting.')
+        res.end('Stopped tweeting.');
+        tweetTrendingTopics.stopTweeting();
+    }
+});
+//----------------------------------------------------------------------------

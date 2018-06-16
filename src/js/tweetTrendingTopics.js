@@ -1,20 +1,20 @@
 "use strict";
 
+let tweeterTimer;
+
 function tweetTrendingTopics() {
   var Twitter = require('twitter');
   var config = require('./config');
   var T = new Twitter(config);
 
-  // setInterval Tweeter
   startTweeting();
+
   let counter = 0;
-  let startContinuousTweeting = setInterval(function () {
+  tweeterTimer = setInterval(function () {
     counter++;
     if (counter) {
       console.log('Tweeting with ', counter);
       startTweeting();
-    } else {
-      clearInterval(startContinuousTweeting);
     }
   }, 3600000);
 
@@ -25,8 +25,8 @@ function tweetTrendingTopics() {
     }
     T.get('trends/place', trendsParams, function (err, result, response) {
       if (!err) {
-        var trends = result[0].trends;
-        var sortedTrends = trends.sort(function (b, c) {
+        let trends = result[0].trends;
+        let sortedTrends = trends.sort(function (b, c) {
           if (b.tweet_volume < c.tweet_volume) {
             return -1
           }
@@ -36,8 +36,12 @@ function tweetTrendingTopics() {
           return 0
         });
 
-        for (let i = sortedTrends.length - 1; i >= sortedTrends.length - 5; i--) {
-          console.log(`Trending : ${sortedTrends[i].name} with ${sortedTrends[i].tweet_volume} tweets`);
+        let filteredTrends = sortedTrends.filter((singleTrend) => {
+          return singleTrend.tweet_volume != null
+        });
+        
+        for (let i = filteredTrends.length - 1; i >= 0; i--) {
+          console.log(`Trending : ${filteredTrends[i].name} with ${filteredTrends[i].tweet_volume} tweets`);
           searchAndRetweet(sortedTrends[i].name);
         }
       } else {
@@ -46,16 +50,7 @@ function tweetTrendingTopics() {
       }
     });
 
-    // Set Trends manually and retweet
-    // var trends = ['#LeapForth', '#VijayAwards', '#Aramm', 'Best Actor', '#4SaalModiSarkar', '#AFGvBAN', '#KadaikuttySingamTeaser', '#VikramVedha', '#IndiaWantsRamMandir', '#kumaraswamy'];
-    //
-    // for (var i = 0; i < trends.length; i++) {
-    //   console.log('trends[i].name>>>>', trends[i]);
-    //   searchAndRetweet(trends[i]);
-    // }
-
     function searchAndRetweet(queryString) {
-      // console.log('queryString::', queryString);
       // Get statuses by query string
       var searchParams = {
         q: queryString,
@@ -68,7 +63,7 @@ function tweetTrendingTopics() {
 
           // Choose random tweets from the result to retweet
           let fetchedStatuses = [];
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < 2; i++) {
             let randomTweetIndex = Math.floor(Math.random() * resultStatuses.length);
             if (i < resultStatuses.length) {
               fetchedStatuses.push(resultStatuses[randomTweetIndex]);
@@ -90,17 +85,6 @@ function tweetTrendingTopics() {
                 console.log(err)
               }
             });
-
-            // setTimeout(() => {
-            //   T.post(url, retweetParams, function (err, result, response) {
-            //     if (!err) {
-            //       console.log(result.text);
-            //     } else {
-            //       console.log('Failed to Retweet' + url);
-            //       console.log(err)
-            //     }
-            //   });
-            // }, i * 10000);
           }
         } else {
           console.log('Failed to fetch tweets with query string' + searchParams.q);
@@ -112,4 +96,11 @@ function tweetTrendingTopics() {
 
 }
 
-module.exports = tweetTrendingTopics;
+function stopTweeting() {
+  clearInterval(tweeterTimer);
+}
+
+module.exports = {
+  startTweeting: tweetTrendingTopics,
+  stopTweeting: stopTweeting
+};
