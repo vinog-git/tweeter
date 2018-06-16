@@ -42,18 +42,31 @@ app.post("/api/v1/config", function (req, res) {
     req.body = JSON.stringify(req.body);
     let data = `module.exports=${req.body}`;
     console.log(data);
-    fs.writeFile('./src/js/config.js', data.toString(), (err) => {
-        if (!err) {
-            let isConfigured = fs.existsSync('./src/js/config.js');
-            if (isConfigured) {
-                console.log('Config file Created.');
-                res.end('File Created. Now run /api/v1/tweets/start \n');
-            }
-        } else {
-            console.log(`Error in createFile: ${err}`);
-            res.end();
-        }
-    });
+
+    let fileCreated = fs.writeFileSync('./src/js/config.js', data.toString());
+    console.log('fileCreated>>', fileCreated);
+
+    if (fileCreated || fileCreated === undefined) {
+        console.log('File Created\n');
+        res.end('File Created\n');
+    } else {
+        console.log("Error in file creation");
+        res.end();
+    }
+
+
+    // fs.writeFile('./src/js/config.js', data.toString(), (err) => {
+    //     if (!err) {
+    //         let isConfigured = fs.existsSync('./src/js/config.js');
+    //         if (isConfigured) {
+    //             console.log('Config file Created.');
+    //             res.end('File Created. Now run /api/v1/tweets/start \n');
+    //         }
+    //     } else {
+    //         console.log(`Error in createFile: ${err}`);
+    //         res.end();
+    //     }
+    // });
 });
 //----------------------------------------------------------------------------
 // Start or stop tweeting
