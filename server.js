@@ -92,7 +92,8 @@ app.get('/api/v1/xlsx', (req, res) => {
             console.log('Excel file data returned');
             res.writeHead(200);
             res.end(JSON.stringify({ 'data': xlData }));
-        } catch{
+        }
+        catch{
             res.writeHead(412);
             res.end(JSON.stringify({ 'error': 'Custom Error' }));
         }
