@@ -42,15 +42,15 @@ app.post("/api/v1/config", function (req, res) {
     req.body = JSON.stringify(req.body);
     let data = `module.exports=${req.body}`;
     fs.writeFile('./src/js/config.js', data, (err) => {
-        if (err) {
-            console.log(`Error in createFile: ${err}`);
-            res.end();
-        } else {
+        if (!err) {
             let isConfigured = fs.existsSync('./src/js/config.js');
             if (isConfigured) {
                 console.log('Config file Created.');
                 res.end('File Created. Now run /api/v1/tweets/start \n');
             }
+        } else {
+            console.log(`Error in createFile: ${err}`);
+            res.end();
         }
     });
 });
