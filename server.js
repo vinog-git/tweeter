@@ -12,12 +12,9 @@ const Twitter = require('twitter');
 // Require custom modules
 let tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
 //----------------------------------------------------------------------------
-// Define local Variables
-let isConfigured = false;
-//----------------------------------------------------------------------------
 // Initial Tweet
 (function init() {
-    isConfigured = isConfigFilePresent();
+    let isConfigured = fs.existsSync('./src/js/config.js');
     if (isConfigured) {
         // tweetTrendingTopics.startTweeting();
     } else {
@@ -29,11 +26,6 @@ let isConfigured = false;
 app.use('/', express.static('src'));
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log('Tweeter is listening at ' + PORT));
-//----------------------------------------------------------------------------
-// Check config file availability
-function isConfigFilePresent() {
-    return fs.existsSync('./src/js/config.js')
-}
 //----------------------------------------------------------------------------
 // BodyParser to read request body
 app.use(bodyParser.urlencoded({
@@ -54,7 +46,7 @@ app.post("/api/v1/config", function (req, res) {
             console.log(`Error in createFile: ${err}`);
             res.end();
         } else {
-            isConfigured = isConfigFilePresent();
+            let isConfigured = fs.existsSync('./src/js/config.js');
             if (isConfigured) {
                 console.log('Config file Created.');
                 res.end('File Created. Now run /api/v1/tweets/start \n');
@@ -83,7 +75,7 @@ app.all('/api/v1/tweets/:action', (req, res) => {
 // Get data from tweets.xlsx
 
 app.get('/api/v1/xlsx', (req, res) => {
-    isConfigured = isConfigFilePresent();
+    let isConfigured = fs.existsSync('./src/js/config.js');
     if (isConfigured && fs.existsSync('uploads/tweets.xlsx')) {
         let workbook = xlsx.readFile('uploads/tweets.xlsx');
         let sheet_name_list = workbook.SheetNames;
@@ -100,7 +92,7 @@ app.get('/api/v1/xlsx', (req, res) => {
 // Trigger tweet from excel
 
 app.get('/api/v1/tweetfromexcel', (req, res) => {
-    isConfigured = isConfigFilePresent();
+    let isConfigured = fs.existsSync('./src/js/config.js');
     if (isConfigured && fs.existsSync('uploads/tweets.xlsx')) {
         let config = require('./src/js/config');
         const T = new Twitter(config);
