@@ -16,6 +16,7 @@ const T = new Twitter(config);
 // Require custom modules
 const media = require('./src/js/mediaUpload');
 const tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
+const tweetSelectedTrends = require('./src/js/tweetSelectedTrends');
 //----------------------------------------------------------------------------
 // Start Express Server
 app.use('/', express.static('src'));
@@ -29,12 +30,12 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 //----------------------------------------------------------------------------
 // Promise to create File
-let createFile = new Promise((resolve, reject) => {
-    let source = process.env.file_location;
-    let outPutFile = 'uploads/tweets.xlsx';
-    wget.download(source, outPutFile);
-    resolve('success');
-});
+// let createFile = new Promise((resolve, reject) => {
+//     let source = process.env.file_location;
+//     let outPutFile = 'uploads/tweets.xlsx';
+//     wget.download(source, outPutFile);
+//     resolve('success');
+// });
 //----------------------------------------------------------------------------
 // let mediaStatus = media.getStatus('1212');
 // media.uploadMedia('star_wars.png');
@@ -99,4 +100,12 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
     });
 });
 //----------------------------------------------------------------------------
-
+// Tweet with given trends
+app.post('/api/v1/selectedtrends', (req, res) => {
+    let selectedTrends = req.body.data.split(',');
+    tweetSelectedTrends(selectedTrends);
+    let startInterval = setInterval(() => {
+        tweetSelectedTrends(selectedTrends);
+    }, 900000);
+    res.end(`Tweeting trends ${selectedTrends}\n`);
+});
