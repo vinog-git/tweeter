@@ -7,8 +7,6 @@ function tweetTrendingTopics() {
   let config = require('./config');
   let T = new Twitter(config);
 
-  startTweeting();
-
   let counter = 0;
   tweeterTimer = setInterval(function () {
     counter++;

@@ -8,19 +8,11 @@ const bodyParser = require("body-parser");
 const app = express();
 const xlsx = require('xlsx');
 const Twitter = require('twitter');
+let config = require('./src/js/config');
+const T = new Twitter(config);
 //----------------------------------------------------------------------------
 // Require custom modules
 let tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
-//----------------------------------------------------------------------------
-// Initial Tweet
-(function init() {
-    let isConfigured = fs.existsSync('./src/js/config.js');
-    if (isConfigured) {
-        // tweetTrendingTopics.startTweeting();
-    } else {
-        console.log('Config File not Available.');
-    }
-})();
 //----------------------------------------------------------------------------
 // Start Express Server
 app.use('/', express.static('src'));
@@ -37,39 +29,8 @@ app.use(bodyParser.json());
 
 // All API Services
 //----------------------------------------------------------------------------
-// Create config file and start tweeting
-app.post("/api/v1/config", function (req, res) {
-    req.body = JSON.stringify(req.body);
-    let data = `module.exports=${req.body}`;
-    console.log(data);
+// Start or stop tweeting. action - start/stop
 
-    // let fileCreated = fs.writeFileSync('./src/js/config.js', data.toString());
-    // console.log('fileCreated>>', fileCreated);
-
-    // if (fileCreated || fileCreated === undefined) {
-    //     console.log('File Created\n');
-    //     res.end('File Created\n');
-    // } else {
-    //     console.log("Error in file creation");
-    //     res.end();
-    // }
-
-
-    fs.writeFile('src/js/config.js', data.toString(), (err) => {
-        if (!err) {
-            let isConfigured = fs.existsSync('src/js/config.js');
-            if (isConfigured) {
-                console.log('Config file Created.');
-                res.end('File Created. Now run /api/v1/tweets/start \n');
-            }
-        } else {
-            console.log(`Error in createFile: ${err}`);
-            res.end();
-        }
-    });
-});
-//----------------------------------------------------------------------------
-// Start or stop tweeting
 app.all('/api/v1/tweets/:action', (req, res) => {
     let action = req.params.action;
     if (action === 'start') {
@@ -79,18 +40,14 @@ app.all('/api/v1/tweets/:action', (req, res) => {
     } else {
         console.log('Stopped tweeting.')
         res.end('Stopped tweeting.\n');
-        isConfigured = isConfigFilePresent();
-        if (isConfigured) {
-            tweetTrendingTopics.stopTweeting();
-        }
+        tweetTrendingTopics.stopTweeting();
     }
 });
 //----------------------------------------------------------------------------
 // Get data from tweets.xlsx
 
 app.get('/api/v1/xlsx', (req, res) => {
-    let isConfigured = fs.existsSync('src/js/config.js');
-    if (isConfigured && fs.existsSync('uploads/tweets.xlsx')) {
+    if (fs.existsSync('uploads/tweets.xlsx')) {
         let workbook = xlsx.readFile('uploads/tweets.xlsx');
         let sheet_name_list = workbook.SheetNames;
         let xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
@@ -106,16 +63,11 @@ app.get('/api/v1/xlsx', (req, res) => {
 // Trigger tweet from excel
 
 app.get('/api/v1/tweetfromexcel', (req, res) => {
-    let isConfigured = fs.existsSync('src/js/config.js');
-    if (isConfigured && fs.existsSync('uploads/tweets.xlsx')) {
-        let config = require('./src/js/config');
-        const T = new Twitter(config);
-
+    if (fs.existsSync('uploads/tweets.xlsx')) {
         let workbook = xlsx.readFile('uploads/tweets.xlsx');
         let sheet_name_list = workbook.SheetNames;
         let tweets = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
         console.log(`${tweets.length} tweets received. Tweeting now...`);
-
         let postUrl = 'statuses/update';
         tweets.forEach((singleTweet) => {
             let postParams = { status: singleTweet.Message };
@@ -129,8 +81,8 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
         });
         res.end(`Completed tweeting all messages.`)
     } else {
-        console.log('Config File not Available.');
-        res.end('Config File not Available.\n')
+        console.log('Excel File not Available.');
+        res.end('Excel File not Available.\n')
     }
 });
 //----------------------------------------------------------------------------
