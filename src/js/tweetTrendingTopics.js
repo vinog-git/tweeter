@@ -1,12 +1,12 @@
 "use strict";
 
 let tweeterTimer;
+let Twitter = require('twitter');
+let config = require('./config');
+let T = new Twitter(config);
+
 
 function tweetTrendingTopics() {
-  let Twitter = require('twitter');
-  let config = require('./config');
-  let T = new Twitter(config);
-
   let counter = 0;
   tweeterTimer = setInterval(function () {
     counter++;

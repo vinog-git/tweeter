@@ -1,7 +1,11 @@
 "use strict";
 
+let Twitter = require('twitter');
+let config = require('./config');
+let T = new Twitter(config);
+
 function tweetFromExcel() {
-    fetch('localhost:3000/api/v1/xlsx').then(res => res.json())
+    fetch('/api/v1/xlsx').then(res => res.json())
         .catch(error => console.error('Error:', error))
         .then(res => {
             console.log('Received excel Response.');
@@ -13,13 +17,9 @@ function tweetFromExcel() {
 
 function tweetStatuses(tweets) {
     tweets = JSON.parse(tweets);
-    
-    tweets.forEach((singleTweet) => {
-        console.log('Tweeting status');
-        let Twitter = require('twitter');
-        let config = require('./config');
-        let T = new Twitter(config);
 
+    tweets.forEach((singleTweet) => {
+        console.log('Tweeting status\n');
         let postUrl = 'statuses/update';
         let postParams = {
             status: singleTweet.Message
@@ -27,9 +27,9 @@ function tweetStatuses(tweets) {
 
         T.post(postUrl, postParams, (err, result, response) => {
             if (!err) {
-                console.log(`Tweeted. ID: ${result.id_str}. Message: ${result.text}`);
+                console.log(`Tweeted. \nID: ${result.id_str}. Message: ${result.text}\n`);
             } else {
-                console.log(`Failed to post Tweets. Error: ${err}`);
+                console.log(`Failed to post Tweets. Error: ${err}\n`);
             }
         });
     });

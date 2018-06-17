@@ -8,12 +8,14 @@ const bodyParser = require("body-parser");
 const app = express();
 const xlsx = require('xlsx');
 const wget = require('wget');
+
 const Twitter = require('twitter');
 let config = require('./src/js/config');
 const T = new Twitter(config);
 //----------------------------------------------------------------------------
 // Require custom modules
-let tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
+const media = require('./src/js/mediaUpload');
+const tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
 //----------------------------------------------------------------------------
 // Start Express Server
 app.use('/', express.static('src'));
@@ -34,6 +36,12 @@ let createFile = new Promise((resolve, reject) => {
     resolve('success');
 });
 //----------------------------------------------------------------------------
+// let mediaStatus = media.getStatus('1212');
+// media.uploadMedia('star_wars.png');
+//----------------------------------------------------------------------------
+
+
+
 
 // All API Services
 //----------------------------------------------------------------------------
@@ -87,7 +95,8 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
                 }
             });
         });
-        res.end(`Completed tweeting all messages.\n ${tweetsResult}\n`);
+        res.end(`Completed tweeting all messages.\n`);
     });
 });
 //----------------------------------------------------------------------------
+
