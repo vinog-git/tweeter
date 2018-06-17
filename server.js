@@ -77,8 +77,6 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
         console.log(`${tweets.length} tweets received. Tweeting now...`);
         let postUrl = 'statuses/update';
         tweets.forEach((singleTweet) => {
-            console.log(singleTweet.Message);
-            return;
             let postParams = { status: singleTweet.Message };
             T.post(postUrl, postParams, (err, result, response) => {
                 if (!err) {
