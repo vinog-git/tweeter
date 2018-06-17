@@ -7,6 +7,7 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const app = express();
 const xlsx = require('xlsx');
+const wget = require('wget');
 const Twitter = require('twitter');
 let config = require('./src/js/config');
 const T = new Twitter(config);
@@ -25,7 +26,11 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 //----------------------------------------------------------------------------
-
+// Download files
+let source = process.env.file_location;
+let outPutFile = 'uploads/new_Tweets.xlsx';
+wget.download(source, outPutFile);
+//----------------------------------------------------------------------------
 
 // All API Services
 //----------------------------------------------------------------------------
@@ -63,7 +68,7 @@ app.get('/api/v1/xlsx', (req, res) => {
 // Trigger tweet from excel
 
 app.get('/api/v1/tweetfromexcel', (req, res) => {
-    // if (fs.existsSync('uploads/tweets.xlsx')) {
+    if (fs.existsSync('uploads/tweets.xlsx')) {
         let workbook = xlsx.readFile('uploads/tweets.xlsx');
         let sheet_name_list = workbook.SheetNames;
         let tweets = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
@@ -80,9 +85,9 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
             });
         });
         res.end(`Completed tweeting all messages.`)
-    // } else {
-    //     console.log('Excel File not Available.');
-    //     res.end('Excel File not Available.\n')
-    // }
+    } else {
+        console.log('Excel File not Available.');
+        res.end('Excel File not Available.\n')
+    }
 });
 //----------------------------------------------------------------------------
