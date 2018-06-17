@@ -76,17 +76,18 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
         let tweets = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
         console.log(`${tweets.length} tweets received. Tweeting now...`);
         let postUrl = 'statuses/update';
+        let tweetsResult = [];
         tweets.forEach((singleTweet) => {
             let postParams = { status: singleTweet.Message };
             T.post(postUrl, postParams, (err, result, response) => {
                 if (!err) {
-                    console.log(`Success: \nID: ${result.id_str}. \nMessage: ${result.text}`);
+                    tweetsResult.push(result.id_str);
                 } else {
                     console.log(`Failed to post Tweets. Error: ${err}`);
                 }
             });
         });
-        res.end(`Completed tweeting all messages.`)
+        res.end(`Completed tweeting all messages.\n ${tweetsResult}\n`);
     });
 });
 //----------------------------------------------------------------------------
