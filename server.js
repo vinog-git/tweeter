@@ -26,6 +26,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 //----------------------------------------------------------------------------
+// Promise to create File
+let createFile = new Promise((resolve, reject) => {
+    let source = process.env.file_location;
+    let outPutFile = 'uploads/tweets.xlsx';
+    wget.download(source, outPutFile);
+    resolve('success');
+});
+//----------------------------------------------------------------------------
 
 // All API Services
 //----------------------------------------------------------------------------
@@ -61,12 +69,8 @@ app.get('/api/v1/xlsx', (req, res) => {
 });
 //----------------------------------------------------------------------------
 // Trigger tweet from excel
-
 app.get('/api/v1/tweetfromexcel', (req, res) => {
     createFile.then(() => {
-        console.log(fs.existsSync('uploads/tweets.xlsx'));
-        res.end(`File exists`);
-        return;
         let workbook = xlsx.readFile('uploads/tweets.xlsx');
         let sheet_name_list = workbook.SheetNames;
         let tweets = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
@@ -86,13 +90,5 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
         });
         res.end(`Completed tweeting all messages.`)
     });
-
-
 });
 //----------------------------------------------------------------------------
-let createFile = new Promise((resolve, reject) => {
-    let source = process.env.file_location;
-    let outPutFile = 'uploads/tweets.xlsx';
-    wget.download(source, outPutFile);
-    resolve('success');
-});
