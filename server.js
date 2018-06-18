@@ -110,7 +110,7 @@ app.post('/api/v1/selectedtrends', (req, res) => {
         let startTweetingSelectedTrends = setInterval(() => {
             console.log(`selectedTrends in service: ${selectedTrends}`);
             tweetSelectedTrends(selectedTrends);
-        }, 5000);
+        }, 600000);
         tweetinginIntervals.push(startTweetingSelectedTrends);
         res.end('Tweeting\n');
     } else {
