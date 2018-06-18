@@ -62,13 +62,13 @@ function followOwners(selectedTweet) {
     return new Promise((resolve, reject) => {
         let user_id_str = selectedTweet.user.id_str;
         let followParams = { user_id: user_id_str }
-        T.post('friendships/create', followParams, (err, result, response) => {
-            if (!err) {
+        // T.post('friendships/create', followParams, (err, result, response) => {
+        //     if (!err) {
                 resolve(selectedTweet.id_str);
-            } else {
-                reject(err);
-            }
-        });
+            // } else {
+            //     reject(err);
+            // }
+        // });
     });
 }
 
