@@ -102,10 +102,17 @@ app.get('/api/v1/tweetfromexcel', (req, res) => {
 //----------------------------------------------------------------------------
 // Tweet with given trends
 app.post('/api/v1/selectedtrends', (req, res) => {
-    let selectedTrends = req.body.data.split(',');
-    tweetSelectedTrends(selectedTrends);
-    let startInterval = setInterval(() => {
-        tweetSelectedTrends(selectedTrends);
-    }, 900000);
-    res.end(`Tweeting trends ${selectedTrends}\n`);
+    let selectedTrends = req.body.data;
+    let authKey = req.body.authKey;
+    if (authKey === process.env.v_key) {
+        console.log('Successfully authenticated. Tweeting now. \n');
+        let startInterval = setInterval(() => {
+            console.log(`selectedTrends in service: ${selectedTrends}`);
+            tweetSelectedTrends(selectedTrends);
+        }, 900000);
+        res.end('Tweeting\n');
+    } else {
+        console.log('Authentication Failure');
+        res.end('Authentication Failure.\n');
+    }
 });
