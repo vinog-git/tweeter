@@ -17,6 +17,7 @@ const T = new Twitter(config);
 const media = require('./src/js/mediaUpload');
 const tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
 const tweetSelectedTrends = require('./src/js/tweetSelectedTrends');
+let tweetinginIntervals = [];
 //----------------------------------------------------------------------------
 // Start Express Server
 app.use('/', express.static('src'));
@@ -106,13 +107,28 @@ app.post('/api/v1/selectedtrends', (req, res) => {
     let authKey = req.body.authKey;
     if (authKey === process.env.v_key) {
         console.log('Successfully authenticated. Tweeting now. \n');
-        let startInterval = setInterval(() => {
+        let startTweetingSelectedTrends = setInterval(() => {
             console.log(`selectedTrends in service: ${selectedTrends}`);
             tweetSelectedTrends(selectedTrends);
-        }, 900000);
+        }, 5000);
+        tweetinginIntervals.push(startTweetingSelectedTrends);
         res.end('Tweeting\n');
     } else {
         console.log('Authentication Failure');
         res.end('Authentication Failure.\n');
     }
 });
+//----------------------------------------------------------------------------
+// Stop all interval Tweeting;
+app.get('/api/v1/stopalltweets',(req, res)=>{
+    if(tweetinginIntervals.length){
+        tweetinginIntervals.forEach((singleTimer)=>{
+            clearInterval(singleTimer);
+            console.log(`Stopped tweeting\n`);
+            res.end(`Stopped tweeting\n`);
+        });
+    }else{
+        res.end('No timers to stop\n')
+    }
+});
+//----------------------------------------------------------------------------
