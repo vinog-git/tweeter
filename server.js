@@ -17,6 +17,7 @@ const T = new Twitter(config);
 const media = require('./src/js/mediaUpload');
 const tweetTrendingTopics = require('./src/js/tweetTrendingTopics');
 const tweetSelectedTrends = require('./src/js/tweetSelectedTrends');
+const lists = require('./src/js/lists');
 let tweetinginIntervals = [];
 //----------------------------------------------------------------------------
 // Start Express Server
@@ -120,15 +121,30 @@ app.post('/api/v1/selectedtrends', (req, res) => {
 });
 //----------------------------------------------------------------------------
 // Stop all interval Tweeting;
-app.get('/api/v1/stopalltweets',(req, res)=>{
-    if(tweetinginIntervals.length){
-        tweetinginIntervals.forEach((singleTimer)=>{
+app.get('/api/v1/stopalltweets', (req, res) => {
+    if (tweetinginIntervals.length) {
+        tweetinginIntervals.forEach((singleTimer) => {
             clearInterval(singleTimer);
             console.log(`Stopped tweeting\n`);
             res.end(`Stopped tweeting\n`);
         });
-    }else{
+    } else {
         res.end('No timers to stop\n')
     }
 });
+//----------------------------------------------------------------------------
+// Create list and add users;
+app.post('/api/v1/listAdd', (req, res) => {
+    let data = req.body.data;
+    let authKey = req.body.authKey;
+    if (authKey === process.env.v_key) {
+        console.log('Successfully authenticated.');
+        res.end('Successfully authenticated.\n');
+        lists.addToList(data);
+    } else {
+        console.log('Authentication Failure');
+        res.end('Authentication Failure.\n');
+    }
+})
+
 //----------------------------------------------------------------------------
