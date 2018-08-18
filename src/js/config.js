@@ -1,5 +1,6 @@
 "use strict"
-let ENV = process.env;
+require('dotenv').config();
+let ENV = JSON.parse(process.env.twitter_key);
 
 module.exports = {
     "consumer_key": ENV.consumer_key,

@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const xlsx = require('xlsx');
 const wget = require('wget');
+require('dotenv').config();
 
 const Twitter = require('twitter');
 let config = require('./src/js/config');
@@ -43,6 +44,13 @@ app.use(bodyParser.json());
 // media.uploadMedia('star_wars.png');
 //----------------------------------------------------------------------------
 
+
+// Function for tweeting trends
+
+function tweetTrends(trends){
+    console.log(`selectedTrends in service: ${trends}`);
+    tweetSelectedTrends(trends);
+}
 
 
 
@@ -108,9 +116,13 @@ app.post('/api/v1/selectedtrends', (req, res) => {
     let authKey = req.body.authKey;
     if (authKey === process.env.v_key) {
         console.log('Successfully authenticated. Tweeting now. \n');
-        let startTweetingSelectedTrends = setInterval(() => {
-            console.log(`selectedTrends in service: ${selectedTrends}`);
-            tweetSelectedTrends(selectedTrends);
+        
+        // Tweet Immediately
+        tweetTrends(selectedTrends);
+
+        //Timer to tweet regularly
+        let startTweetingSelectedTrends = setInterval(()=>{
+            tweetTrends(selectedTrends)
         }, 600000);
         tweetinginIntervals.push(startTweetingSelectedTrends);
         res.end('Tweeting\n');

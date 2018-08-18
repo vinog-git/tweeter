@@ -4,6 +4,7 @@ let Twitter = require('twitter');
 let config = require('./config');
 let T = new Twitter(config);
 
+
 function tweetSelectedTrends(trends) {
     let trendsArray = trends.split(',');
     tweetOneTrend(trendsArray[0]).catch((err) => {
